@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+/* Turnero — dark & sober theme tokens (Tailwind v4 @theme). */
+@theme {
+  --color-canvas: #0b0b0f;
+  --color-surface: #16171d;
+  --color-surface-2: #1d1f27;
+  --color-border: #262833;
+  --color-ink: #e7e7ea;
+  --color-muted: #9a9ba5;
+  --color-accent: #b89364; /* muted brass; overridable per-tenant at runtime */
+  --color-accent-ink: #14110b;
+}
+
+:root {
+  color-scheme: dark;
+  /* Per-tenant accent injected at runtime; falls back to the theme token. */
+  --accent: var(--color-accent);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* FullCalendar — fit the dark/sober theme. */
+.fc-dark {
+  --fc-border-color: var(--color-border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: var(--color-surface-2);
+  --fc-today-bg-color: rgb(184 147 100 / 0.08);
+  --fc-now-indicator-color: var(--color-accent);
+}
+.fc-dark .fc {
+  color: var(--color-ink);
+}
+.fc-dark .fc .fc-button {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  color: var(--color-ink);
+  text-transform: capitalize;
+}
+.fc-dark .fc .fc-button-primary:not(:disabled).fc-button-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--color-accent-ink);
+}
+.fc-dark .fc .fc-col-header-cell-cushion,
+.fc-dark .fc .fc-daygrid-day-number {
+  color: var(--color-muted);
+}
+
+/* Utilities that read the runtime accent variable. */
+.accent-bg {
+  background-color: var(--accent);
+}
+.accent-text {
+  color: var(--accent);
+}
+.accent-ring {
+  box-shadow: 0 0 0 2px var(--accent);
+}

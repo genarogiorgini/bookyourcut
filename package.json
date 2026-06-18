@@ -1,0 +1,18 @@
+{
+  "name": "turnero",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-tenant barbershop appointment PWA with WhatsApp click-to-chat booking",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev:api": "pnpm --filter @turnero/api start:dev",
+    "dev:web": "pnpm --filter @turnero/web start",
+    "build:shared": "pnpm --filter @turnero/shared build",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
+  }
+}

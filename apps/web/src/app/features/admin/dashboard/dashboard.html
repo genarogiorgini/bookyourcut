@@ -1,0 +1,129 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between gap-3">
+    <h2 class="text-xl font-medium">Agenda</h2>
+    <select
+      [ngModel]="barberFilter()"
+      (ngModelChange)="onFilterChange($event)"
+      class="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
+    >
+      <option value="">Todos los barberos</option>
+      @for (b of barbers(); track b.id) {
+        <option [value]="b.id">{{ b.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="rounded-2xl border border-border bg-surface p-2 text-sm fc-dark">
+    <div #cal></div>
+  </div>
+
+  <!-- Edit panel -->
+  @if (selected(); as appt) {
+    <div
+      class="fixed inset-0 z-30 flex items-end justify-center bg-black/50 sm:items-center"
+      (click)="closePanel()"
+    >
+      <div
+        class="w-full max-w-md rounded-t-2xl border border-border bg-surface p-5 sm:rounded-2xl"
+        (click)="$event.stopPropagation()"
+      >
+        <h3 class="mb-1 text-lg font-semibold">{{ appt.clientName }}</h3>
+        <p class="mb-4 text-sm text-muted">{{ fmt(appt.startsAt) }}</p>
+
+        <dl class="mb-4 space-y-1 text-sm">
+          <div class="flex justify-between">
+            <dt class="text-muted">Teléfono</dt>
+            <dd>{{ appt.clientPhone }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-muted">Creado por</dt>
+            <dd>{{ appt.createdVia === 'client' ? 'Cliente' : 'Barbería' }}</dd>
+          </div>
+        </dl>
+
+        <label class="mb-3 block">
+          <span class="mb-1 block text-sm text-muted">Estado</span>
+          <select
+            [(ngModel)]="editStatus"
+            class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2"
+          >
+            @for (s of statuses; track s) {
+              <option [value]="s">{{ statusLabel[s] }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="mb-4 block">
+          <span class="mb-1 block text-sm text-muted">Nota privada</span>
+          <textarea
+            [(ngModel)]="editNotes"
+            rows="2"
+            class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2"
+          ></textarea>
+        </label>
+
+        <div class="flex gap-2">
+          <button
+            type="button"
+            (click)="saveEdit()"
+            class="accent-bg flex-1 rounded-lg py-2.5 font-medium text-[color:var(--color-accent-ink)]"
+          >
+            Guardar
+          </button>
+          <button
+            type="button"
+            (click)="cancelAppt()"
+            class="rounded-lg border border-red-700/50 px-4 py-2.5 text-sm text-red-300"
+          >
+            Cancelar turno
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Create panel -->
+  @if (creating()) {
+    <div
+      class="fixed inset-0 z-30 flex items-end justify-center bg-black/50 sm:items-center"
+      (click)="closePanel()"
+    >
+      <div
+        class="w-full max-w-md rounded-t-2xl border border-border bg-surface p-5 sm:rounded-2xl"
+        (click)="$event.stopPropagation()"
+      >
+        <h3 class="mb-1 text-lg font-semibold">Nuevo turno</h3>
+        <p class="mb-4 text-sm text-muted">{{ fmt(creating()!.startsAt) }}</p>
+
+        <label class="mb-3 block">
+          <span class="mb-1 block text-sm text-muted">Barbero</span>
+          <select
+            [(ngModel)]="newBarberId"
+            class="w-full rounded-lg border border-border bg-surface-2 px-3 py-2"
+          >
+            @for (b of barbers(); track b.id) {
+              <option [value]="b.id">{{ b.name }}</option>
+            }
+          </select>
+        </label>
+        <input
+          [(ngModel)]="newName"
+          placeholder="Nombre del cliente"
+          class="mb-3 w-full rounded-lg border border-border bg-surface-2 px-3 py-2"
+        />
+        <input
+          [(ngModel)]="newPhone"
+          placeholder="Teléfono"
+          class="mb-4 w-full rounded-lg border border-border bg-surface-2 px-3 py-2"
+        />
+        <button
+          type="button"
+          (click)="createAppt()"
+          class="accent-bg w-full rounded-lg py-2.5 font-medium text-[color:var(--color-accent-ink)]"
+        >
+          Crear turno
+        </button>
+      </div>
+    </div>
+  }
+</div>
