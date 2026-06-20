@@ -6,7 +6,6 @@ export interface AppConfig {
     url: string;
     serviceRoleKey: string;
     anonKey: string;
-    jwtSecret: string;
   };
 }
 
@@ -21,6 +20,5 @@ export default (): AppConfig => ({
     url: process.env.SUPABASE_URL ?? '',
     serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
     anonKey: process.env.SUPABASE_ANON_KEY ?? '',
-    jwtSecret: process.env.SUPABASE_JWT_SECRET ?? '',
   },
 });

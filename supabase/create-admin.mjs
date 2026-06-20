@@ -6,6 +6,13 @@
 //
 // Requires @supabase/supabase-js (installed in apps/api or run from there).
 
+import { loadEnvFile } from 'node:process';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+try { loadEnvFile(resolve(__dirname, '../apps/api/.env')); } catch {}
+
 import { createClient } from '@supabase/supabase-js';
 
 const url = process.env.SUPABASE_URL;

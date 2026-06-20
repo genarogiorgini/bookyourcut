@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.108.1
+        version: 2.108.1
 
   apps/api:
     dependencies:
@@ -23,7 +27,7 @@ importers:
         specifier: ^11.0.1
         version: 11.1.26(@nestjs/common@11.1.26(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.26)
       '@supabase/supabase-js':
-        specifier: ^2.45.0
+        specifier: ^2.108.1
         version: 2.108.1
       '@turnero/shared':
         specifier: workspace:*
@@ -153,7 +157,7 @@ importers:
         specifier: ^6.1.15
         version: 6.1.20(@fullcalendar/core@6.1.20)
       '@supabase/supabase-js':
-        specifier: ^2.45.0
+        specifier: ^2.108.1
         version: 2.108.1
       '@turnero/shared':
         specifier: workspace:*

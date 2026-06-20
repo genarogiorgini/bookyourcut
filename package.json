@@ -7,6 +7,9 @@
   "engines": {
     "node": ">=24"
   },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.1"
+  },
   "scripts": {
     "dev:api": "pnpm --filter @turnero/api start:dev",
     "dev:web": "pnpm --filter @turnero/web start",
