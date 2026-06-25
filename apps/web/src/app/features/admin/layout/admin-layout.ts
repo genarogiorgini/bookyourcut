@@ -7,36 +7,36 @@ import { ShopStore } from '../../../core/shop.store';
   selector: 'app-admin-layout',
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   template: `
-    <div class="min-h-dvh">
+    <div class="min-h-dvh pb-[env(safe-area-inset-bottom)]">
       <header
-        class="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-canvas/90 px-4 py-3 backdrop-blur"
+        class="sticky top-0 z-20 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-[color:var(--color-border)] bg-[color:var(--color-canvas)]/85 px-4 py-3 backdrop-blur sm:px-5 sm:py-4"
       >
-        <div>
-          <p class="text-xs text-muted">BackOffice</p>
-          <h1 class="font-semibold">{{ store.shop()?.name ?? 'Turnero' }}</h1>
+        <div class="min-w-0">
+          <p class="eyebrow">BackOffice</p>
+          <h1 class="truncate font-display text-lg sm:text-2xl">{{ store.shop()?.name ?? 'Turnero' }}</h1>
         </div>
         <button
           type="button"
           (click)="signOut()"
-          class="rounded-lg border border-border px-3 py-1.5 text-sm text-muted"
+          class="shrink-0 rounded-full border border-[color:var(--color-border)] px-3 py-1.5 text-xs text-[color:var(--color-muted)] hover:border-[color:var(--color-ink)] hover:text-[color:var(--color-ink)] sm:px-4 sm:text-sm"
         >
           Salir
         </button>
       </header>
 
-      <nav class="flex gap-1 overflow-x-auto border-b border-border bg-surface px-2 py-2">
+      <nav class="scroll-rail sticky top-[57px] z-10 flex gap-1 overflow-x-auto border-b border-[color:var(--color-border)] bg-surface px-3 py-2 sm:top-[73px] sm:py-3">
         @for (item of nav; track item.path) {
           <a
             [routerLink]="['/', slug(), 'admin', item.path]"
-            routerLinkActive="accent-bg !text-[color:var(--color-accent-ink)]"
-            class="shrink-0 rounded-lg px-3 py-1.5 text-sm text-muted"
+            routerLinkActive="!bg-[color:var(--color-ink)] !text-[color:#fdfaf6]"
+            class="shrink-0 rounded-full px-4 py-1.5 text-sm text-[color:var(--color-muted)] transition hover:text-[color:var(--color-ink)]"
           >
             {{ item.label }}
           </a>
         }
       </nav>
 
-      <main class="mx-auto w-full max-w-5xl px-4 py-5">
+      <main class="mx-auto w-full max-w-5xl px-4 py-5 sm:px-5 sm:py-7">
         <router-outlet />
       </main>
     </div>

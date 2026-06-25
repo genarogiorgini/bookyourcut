@@ -1,21 +1,35 @@
 @import 'tailwindcss';
 
-/* Turnero — dark & sober theme tokens (Tailwind v4 @theme). */
+/* Turnero — editorial light theme inspired by GlossGenius (solo pros). */
 @theme {
-  --color-canvas: #0b0b0f;
-  --color-surface: #16171d;
-  --color-surface-2: #1d1f27;
-  --color-border: #262833;
-  --color-ink: #e7e7ea;
-  --color-muted: #9a9ba5;
-  --color-accent: #b89364; /* muted brass; overridable per-tenant at runtime */
-  --color-accent-ink: #14110b;
+  /* Surfaces */
+  --color-canvas: #f6f1ec;        /* cream page */
+  --color-surface: #ffffff;       /* cards */
+  --color-surface-2: #efe7df;     /* secondary card / inputs */
+  --color-border: #e6ddd3;        /* hairlines */
+
+  /* Type */
+  --color-ink: #14110f;           /* near-black with warm undertone */
+  --color-muted: #6b6259;         /* warm muted */
+
+  /* Accent — dusty rose */
+  --color-accent: #c98a9b;
+  --color-accent-ink: #14110f;    /* dark ink reads on rose */
+  --color-accent-soft: #e9c9d1;   /* very soft rose for hero / chips */
+  --color-accent-deep: #8a4a5b;
+
+  /* Fonts */
+  --font-display: 'Instrument Serif', 'Cormorant Garamond', ui-serif, Georgia,
+    'Times New Roman', serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
 }
 
 :root {
-  color-scheme: dark;
-  /* Per-tenant accent injected at runtime; falls back to the theme token. */
+  color-scheme: light;
   --accent: var(--color-accent);
+  --accent-soft: var(--color-accent-soft);
+  --accent-deep: var(--color-accent-deep);
 }
 
 html,
@@ -27,46 +41,189 @@ body {
   margin: 0;
   background: var(--color-canvas);
   color: var(--color-ink);
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: 'ss01', 'cv11';
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Respect iOS notch / home indicator everywhere by default. */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
-/* FullCalendar — fit the dark/sober theme. */
-.fc-dark {
-  --fc-border-color: var(--color-border);
-  --fc-page-bg-color: transparent;
-  --fc-neutral-bg-color: var(--color-surface-2);
-  --fc-today-bg-color: rgb(184 147 100 / 0.08);
-  --fc-now-indicator-color: var(--color-accent);
+/* Avoid iOS form auto-zoom: inputs need ≥16px on mobile. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }
-.fc-dark .fc {
-  color: var(--color-ink);
+
+/* ------- Editorial typographic helpers ------- */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
 }
-.fc-dark .fc .fc-button {
-  background: var(--color-surface-2);
-  border-color: var(--color-border);
-  color: var(--color-ink);
-  text-transform: capitalize;
+.headline-xl {
+  font-family: var(--font-display);
+  font-weight: 400;
+  /* Smaller floor for phones so the hero never feels cramped. */
+  font-size: clamp(2.25rem, 11vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
 }
-.fc-dark .fc .fc-button-primary:not(:disabled).fc-button-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--color-accent-ink);
+.headline-lg {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 7vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
 }
-.fc-dark .fc .fc-col-header-cell-cushion,
-.fc-dark .fc .fc-daygrid-day-number {
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.7rem;
   color: var(--color-muted);
 }
 
-/* Utilities that read the runtime accent variable. */
-.accent-bg {
-  background-color: var(--accent);
+/* Sticky bottom action bar for mobile flows (booking, etc.). */
+.sticky-cta {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-canvas) 0%, transparent) 0%,
+    var(--color-canvas) 35%
+  );
+  padding: 1rem 0 calc(env(safe-area-inset-bottom) + 1rem);
 }
-.accent-text {
-  color: var(--accent);
+
+/* Horizontal scroll rails for day/slot pickers — hide ugly bar on mobile. */
+.scroll-rail {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
-.accent-ring {
-  box-shadow: 0 0 0 2px var(--accent);
+.scroll-rail::-webkit-scrollbar { display: none; }
+.scroll-rail > * { scroll-snap-align: start; }
+
+/* ------- Buttons ------- */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.95rem 1.6rem;
+  font-weight: 500;
+  font-size: 1rem;
+  /* Comfortable tap target on phones. */
+  min-height: 48px;
+  transition:
+    transform 0.15s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  will-change: transform;
 }
+.btn-pill:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--color-ink);
+  color: #fdfaf6;
+  box-shadow: 0 10px 30px -12px rgba(20, 17, 15, 0.45);
+}
+.btn-primary:hover { background: #000; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+}
+.btn-outline:hover { background: var(--color-ink); color: #fdfaf6; }
+
+.btn-soft {
+  background: var(--accent-soft);
+  color: var(--color-ink);
+}
+.btn-soft:hover { background: var(--accent); }
+
+/* ------- Surfaces ------- */
+.card-soft {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 0 rgba(20, 17, 15, 0.02),
+    0 18px 40px -28px rgba(20, 17, 15, 0.18);
+}
+
+.hero-blush {
+  background:
+    radial-gradient(120% 80% at 50% 0%, #f1d6dd 0%, #e9c9d1 35%, #d9b1bd 80%);
+}
+
+/* Tenant accent helpers (still supported elsewhere in app) */
+.accent-bg     { background-color: var(--accent); color: var(--color-accent-ink); }
+.accent-text   { color: var(--accent-deep); }
+.accent-ring   { box-shadow: 0 0 0 2px var(--accent); }
+.accent-soft-bg{ background-color: var(--accent-soft); color: var(--color-ink); }
+
+/* ------- Form polish (inputs from tokens look light & airy) ------- */
+input,
+select,
+textarea {
+  font: inherit;
+  color: var(--color-ink);
+}
+input::placeholder,
+textarea::placeholder { color: #a39a90; }
+
+/* ------- FullCalendar — light editorial ------- */
+.fc-dark {
+  --fc-border-color: var(--color-border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: #faf5ef;
+  --fc-today-bg-color: rgb(201 138 155 / 0.10);
+  --fc-now-indicator-color: var(--accent-deep);
+}
+.fc-dark .fc { color: var(--color-ink); font-family: var(--font-sans); }
+.fc-dark .fc .fc-toolbar-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.55rem;
+  letter-spacing: -0.01em;
+}
+.fc-dark .fc .fc-button {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-ink);
+  text-transform: capitalize;
+  border-radius: 9999px;
+  padding: 0.4rem 0.9rem;
+  box-shadow: none;
+}
+.fc-dark .fc .fc-button:hover { background: var(--color-surface-2); }
+.fc-dark .fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc-dark .fc .fc-button-primary:not(:disabled):active {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: #fdfaf6;
+}
+.fc-dark .fc .fc-col-header-cell-cushion,
+.fc-dark .fc .fc-daygrid-day-number { color: var(--color-muted); }
+.fc-dark .fc .fc-event {
+  border-radius: 8px;
+  padding: 2px 4px;
+  font-size: 0.78rem;
+  border: none;
+}
+
+/* Subtle scrollbar so the cream surfaces stay clean. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #d8cfc4; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #c5bcb1; }

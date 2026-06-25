@@ -24,9 +24,10 @@
       (click)="closePanel()"
     >
       <div
-        class="w-full max-w-md rounded-t-2xl border border-border bg-surface p-5 sm:rounded-2xl"
+        class="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-t-3xl border border-border bg-surface p-5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] sm:rounded-2xl sm:pb-5"
         (click)="$event.stopPropagation()"
       >
+        <div class="mx-auto mb-3 h-1.5 w-10 rounded-full bg-[color:var(--color-border)] sm:hidden"></div>
         <h3 class="mb-1 text-lg font-semibold">{{ appt.clientName }}</h3>
         <p class="mb-4 text-sm text-muted">{{ fmt(appt.startsAt) }}</p>
 
@@ -66,7 +67,7 @@
           <button
             type="button"
             (click)="saveEdit()"
-            class="accent-bg flex-1 rounded-lg py-2.5 font-medium text-[color:var(--color-accent-ink)]"
+            class="btn-pill btn-primary flex-1"
           >
             Guardar
           </button>
@@ -89,9 +90,10 @@
       (click)="closePanel()"
     >
       <div
-        class="w-full max-w-md rounded-t-2xl border border-border bg-surface p-5 sm:rounded-2xl"
+        class="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-t-3xl border border-border bg-surface p-5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] sm:rounded-2xl sm:pb-5"
         (click)="$event.stopPropagation()"
       >
+        <div class="mx-auto mb-3 h-1.5 w-10 rounded-full bg-[color:var(--color-border)] sm:hidden"></div>
         <h3 class="mb-1 text-lg font-semibold">Nuevo turno</h3>
         <p class="mb-4 text-sm text-muted">{{ fmt(creating()!.startsAt) }}</p>
 
@@ -119,7 +121,7 @@
         <button
           type="button"
           (click)="createAppt()"
-          class="accent-bg w-full rounded-lg py-2.5 font-medium text-[color:var(--color-accent-ink)]"
+          class="btn-pill btn-primary w-full"
         >
           Crear turno
         </button>

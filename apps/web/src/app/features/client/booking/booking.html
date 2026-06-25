@@ -1,37 +1,50 @@
-<div class="mx-auto min-h-dvh w-full max-w-xl px-5 pb-24 pt-6">
+<div class="mx-auto min-h-dvh w-full max-w-2xl px-4 pb-10 pt-5 sm:px-5 sm:pt-6">
   <!-- Header -->
-  <header class="mb-6 flex items-center gap-3">
+  <header class="mb-6 flex items-center gap-3 sm:mb-8">
     @if (step() !== 'barber') {
       <button
         type="button"
         (click)="back()"
-        class="rounded-full border border-border bg-surface px-3 py-2 text-sm text-muted"
+        class="shrink-0 rounded-full border border-[color:var(--color-border)] bg-surface px-3 py-2 text-sm text-[color:var(--color-muted)] hover:border-[color:var(--color-ink)] hover:text-[color:var(--color-ink)]"
+        aria-label="Volver"
       >
-        ← Volver
+        ←
       </button>
     } @else {
       <a
         [routerLink]="['/', slug]"
-        class="rounded-full border border-border bg-surface px-3 py-2 text-sm text-muted"
+        class="shrink-0 rounded-full border border-[color:var(--color-border)] bg-surface px-3 py-2 text-sm text-[color:var(--color-muted)] hover:border-[color:var(--color-ink)] hover:text-[color:var(--color-ink)]"
+        aria-label="Inicio"
       >
-        ← Inicio
+        ←
       </a>
     }
-    <h1 class="text-lg font-semibold">{{ shop()?.name }}</h1>
+    <h1 class="truncate font-display text-xl sm:text-2xl">{{ shop()?.name }}</h1>
   </header>
+
+  <!-- Stepper -->
+  <ol class="scroll-rail mb-8 flex items-center gap-2 overflow-x-auto pb-1 text-[11px] uppercase tracking-[0.18em] text-[color:var(--color-muted)] sm:mb-10 sm:text-xs">
+    <li class="shrink-0" [style.color]="step() === 'barber' ? 'var(--color-ink)' : null">01 · Barbero</li>
+    <li class="shrink-0">—</li>
+    <li class="shrink-0" [style.color]="step() === 'slot' ? 'var(--color-ink)' : null">02 · Horario</li>
+    <li class="shrink-0">—</li>
+    <li class="shrink-0" [style.color]="step() === 'summary' ? 'var(--color-ink)' : null">03 · Confirmar</li>
+  </ol>
 
   <!-- Step 1: choose barber -->
   @if (step() === 'barber') {
-    <h2 class="mb-4 text-xl font-medium">Elegí tu barbero</h2>
-    <div class="grid grid-cols-3 gap-4 sm:grid-cols-4">
+    <p class="eyebrow mb-2">Paso 01</p>
+    <h2 class="headline-lg mb-6 sm:mb-8">Elegí tu barbero.</h2>
+
+    <div class="grid grid-cols-3 gap-4 sm:grid-cols-3 sm:gap-6">
       @for (b of shop()?.barbers ?? []; track b.id) {
         <button
           type="button"
           (click)="chooseBarber(b)"
-          class="flex flex-col items-center gap-2"
+          class="group flex flex-col items-center gap-2 sm:gap-3"
         >
           <span
-            class="accent-ring flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-surface-2 text-2xl font-semibold"
+            class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-[color:var(--color-surface-2)] text-2xl font-display ring-1 ring-[color:var(--color-border)] transition group-hover:ring-[color:var(--accent)] group-active:scale-95 sm:h-24 sm:w-24"
           >
             @if (b.photoUrl) {
               <img [src]="b.photoUrl" alt="" class="h-full w-full object-cover" />
@@ -39,7 +52,10 @@
               {{ b.name.charAt(0) }}
             }
           </span>
-          <span class="text-sm">{{ b.name }}</span>
+          <span class="text-xs font-medium sm:text-sm">{{ b.name }}</span>
+          @if (b.pricePerCut) {
+            <span class="text-[11px] text-[color:var(--color-muted)] sm:text-xs">${{ b.pricePerCut }}</span>
+          }
         </button>
       }
     </div>
@@ -47,20 +63,20 @@
 
   <!-- Step 2: pick a slot -->
   @if (step() === 'slot') {
-    <h2 class="mb-1 text-xl font-medium">Disponibilidad</h2>
-    <p class="mb-4 text-sm text-muted">{{ barber()?.name }}</p>
+    <p class="eyebrow mb-2">Paso 02</p>
+    <h2 class="headline-lg mb-1">Elegí tu horario.</h2>
+    <p class="mb-8 text-[color:var(--color-muted)]">Con {{ barber()?.name }}</p>
 
     <!-- day selector -->
-    <div class="mb-5 flex gap-2 overflow-x-auto pb-2">
+    <div class="scroll-rail -mx-4 mb-6 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
       @for (d of days(); track d.iso) {
         <button
           type="button"
           (click)="pickDate(d.iso)"
-          class="shrink-0 rounded-xl border px-3 py-2 text-sm capitalize"
-          [class.accent-bg]="selectedDate() === d.iso"
-          [class.border-border]="selectedDate() !== d.iso"
-          [class.bg-surface]="selectedDate() !== d.iso"
-          [style.color]="selectedDate() === d.iso ? 'var(--color-accent-ink)' : null"
+          class="flex shrink-0 flex-col items-center rounded-2xl border px-4 py-2 text-sm capitalize transition active:scale-95"
+          [style.background]="selectedDate() === d.iso ? 'var(--color-ink)' : 'var(--color-surface)'"
+          [style.color]="selectedDate() === d.iso ? '#fdfaf6' : 'var(--color-muted)'"
+          [style.borderColor]="selectedDate() === d.iso ? 'var(--color-ink)' : 'var(--color-border)'"
         >
           {{ d.label }}
         </button>
@@ -68,25 +84,25 @@
     </div>
 
     @if (loadingSlots()) {
-      <p class="text-muted">Buscando horarios…</p>
+      <p class="text-[color:var(--color-muted)]">Buscando horarios…</p>
     } @else if (slots().length === 0) {
-      <p class="rounded-xl border border-border bg-surface p-4 text-muted">
+      <p class="card-soft p-5 text-[color:var(--color-muted)]">
         No hay horarios para este día.
       </p>
     } @else {
-      <div class="grid grid-cols-3 gap-3 sm:grid-cols-4">
+      <div class="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
         @for (s of slots(); track s.startsAt) {
           @if (s.status === 'free') {
             <button
               type="button"
               (click)="chooseSlot(s)"
-              class="rounded-xl border border-border bg-surface py-3 text-center font-medium transition hover:border-[color:var(--accent)] active:scale-95"
+              class="min-h-[48px] rounded-2xl border border-[color:var(--color-border)] bg-surface py-3 text-center text-sm font-medium transition hover:border-[color:var(--color-ink)] hover:bg-[color:var(--accent-soft)] active:scale-95 sm:text-base"
             >
               {{ slotLabel(s) }}
             </button>
           } @else {
             <span
-              class="flex flex-col items-center rounded-xl border border-border bg-surface-2/40 py-2 text-center text-muted line-through"
+              class="flex min-h-[48px] flex-col items-center justify-center rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-2)]/50 py-2 text-center text-sm text-[color:var(--color-muted)] line-through"
             >
               {{ slotLabel(s) }}
               <small class="text-[10px] no-underline">Ocupado</small>
@@ -99,63 +115,69 @@
 
   <!-- Step 3: summary + confirm -->
   @if (step() === 'summary') {
-    <h2 class="mb-4 text-xl font-medium">Confirmá tu reserva</h2>
+    <p class="eyebrow mb-2">Paso 03</p>
+    <h2 class="headline-lg mb-8">Confirmá tu reserva.</h2>
 
-    <div class="mb-5 space-y-2 rounded-2xl border border-border bg-surface p-4">
-      <div class="flex justify-between">
-        <span class="text-muted">Barbería</span><span>{{ shop()?.name }}</span>
+    <div class="card-soft mb-6 divide-y divide-[color:var(--color-border)] p-2">
+      <div class="flex justify-between px-4 py-3">
+        <span class="text-[color:var(--color-muted)]">Barbería</span>
+        <span class="font-medium">{{ shop()?.name }}</span>
       </div>
-      <div class="flex justify-between">
-        <span class="text-muted">Barbero</span><span>{{ barber()?.name }}</span>
+      <div class="flex justify-between px-4 py-3">
+        <span class="text-[color:var(--color-muted)]">Barbero</span>
+        <span class="font-medium">{{ barber()?.name }}</span>
       </div>
-      <div class="flex justify-between">
-        <span class="text-muted">Fecha y hora</span>
-        <span class="capitalize">{{ summaryWhen() }}</span>
+      <div class="flex justify-between px-4 py-3">
+        <span class="text-[color:var(--color-muted)]">Fecha y hora</span>
+        <span class="font-medium capitalize">{{ summaryWhen() }}</span>
       </div>
       @if (barber()?.pricePerCut) {
-        <div class="flex justify-between">
-          <span class="text-muted">Precio</span><span>${{ barber()?.pricePerCut }}</span>
+        <div class="flex justify-between px-4 py-3">
+          <span class="text-[color:var(--color-muted)]">Precio</span>
+          <span class="font-medium">${{ barber()?.pricePerCut }}</span>
         </div>
       }
     </div>
 
     <div class="space-y-3">
       <label class="block">
-        <span class="mb-1 block text-sm text-muted">Nombre</span>
+        <span class="mb-1 block text-sm text-[color:var(--color-muted)]">Nombre</span>
         <input
           [(ngModel)]="clientName"
           type="text"
           autocomplete="name"
-          class="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-[color:var(--accent)]"
+          class="w-full rounded-2xl border border-[color:var(--color-border)] bg-surface px-4 py-3 outline-none transition focus:border-[color:var(--color-ink)]"
           placeholder="Tu nombre"
         />
       </label>
       <label class="block">
-        <span class="mb-1 block text-sm text-muted">WhatsApp / teléfono</span>
+        <span class="mb-1 block text-sm text-[color:var(--color-muted)]">WhatsApp / teléfono</span>
         <input
           [(ngModel)]="clientPhone"
           type="tel"
           autocomplete="tel"
-          class="w-full rounded-xl border border-border bg-surface px-4 py-3 outline-none focus:border-[color:var(--accent)]"
+          class="w-full rounded-2xl border border-[color:var(--color-border)] bg-surface px-4 py-3 outline-none transition focus:border-[color:var(--color-ink)]"
           placeholder="Ej. 11 2233 4455"
         />
       </label>
     </div>
 
     @if (formError()) {
-      <p class="mt-3 text-sm text-red-300">{{ formError() }}</p>
+      <p class="mt-3 text-sm text-red-700">{{ formError() }}</p>
     }
 
-    <button
-      type="button"
-      (click)="confirm()"
-      [disabled]="submitting()"
-      class="accent-bg mt-6 w-full rounded-2xl py-4 text-lg font-medium text-[color:var(--color-accent-ink)] shadow-lg transition active:scale-95 disabled:opacity-60"
-    >
-      {{ submitting() ? 'Generando…' : 'Confirmar y enviar por WhatsApp' }}
-    </button>
-    <p class="mt-3 text-center text-xs text-muted">
-      Te llevamos a WhatsApp con el mensaje listo. La barbería confirma desde ahí.
-    </p>
+    <div class="sticky-cta mt-8">
+      <button
+        type="button"
+        (click)="confirm()"
+        [disabled]="submitting()"
+        class="btn-pill btn-primary w-full disabled:opacity-60"
+      >
+        {{ submitting() ? 'Generando…' : 'Confirmar y enviar por WhatsApp' }}
+      </button>
+      <p class="mt-3 text-center text-xs text-[color:var(--color-muted)]">
+        Te llevamos a WhatsApp con el mensaje listo. La barbería confirma desde ahí.
+      </p>
+    </div>
   }
 </div>

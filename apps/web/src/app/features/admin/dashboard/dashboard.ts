@@ -25,11 +25,11 @@ import type { Appointment, AppointmentStatus, Barber } from '@turnero/shared';
 import { ApiService } from '../../../core/api.service';
 
 const STATUS_COLORS: Record<AppointmentStatus, string> = {
-  pending: '#b8860b',
-  confirmed: '#5b6c8f',
-  completed: '#3f4756',
-  cancelled: '#7a2e2e',
-  no_show: '#8a3b3b',
+  pending: '#d4a373',     // warm tan
+  confirmed: '#8a4a5b',   // deep rose (matches accent-deep)
+  completed: '#6b6259',   // warm muted
+  cancelled: '#a83a3a',
+  no_show: '#7a2424',
 };
 
 const STATUS_LABEL: Record<AppointmentStatus, string> = {
